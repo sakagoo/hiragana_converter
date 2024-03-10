@@ -8,23 +8,39 @@ class InputForm extends StatefulWidget {
 }
 
 class _InputFormState extends State<InputForm> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: TextField(
-            maxLength: 5,
-            decoration: InputDecoration(hintText: '文章を入力して下さい'),
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextFormField(
+              maxLength: 5,
+              decoration: const InputDecoration(hintText: '文章を入力して下さい'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '文章が入力されていません';
+                }
+                return null;
+              },
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        ElevatedButton(onPressed: () {}, child: const Text('変換'))
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                final formState = _formKey.currentState!;
+                formState.validate();
+              },
+              child: const Text('変換'))
+        ],
+      ),
     );
   }
 }
