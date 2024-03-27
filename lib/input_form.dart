@@ -9,6 +9,7 @@ class InputForm extends StatefulWidget {
 
 class _InputFormState extends State<InputForm> {
   final _formKey = GlobalKey<FormState>();
+  final _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,7 @@ class _InputFormState extends State<InputForm> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: TextFormField(
+              controller: _textEditingController,
               maxLength: 5,
               decoration: const InputDecoration(hintText: '文章を入力して下さい'),
               validator: (value) {
@@ -36,11 +38,20 @@ class _InputFormState extends State<InputForm> {
           ElevatedButton(
               onPressed: () {
                 final formState = _formKey.currentState!;
-                formState.validate();
+                if (!formState.validate()) {
+                  return;
+                }
+                debugPrint('text=${_textEditingController.text}');
               },
               child: const Text('変換'))
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
   }
 }
